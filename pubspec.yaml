@@ -29,6 +29,7 @@ dependencies:
   firebase_auth: ^0.15.4
   connectivity: ^0.4.6+2
   data_connection_checker: ^0.3.4
+  video_player: ^0.10.7
 
 dev_dependencies:
   flutter_test:
