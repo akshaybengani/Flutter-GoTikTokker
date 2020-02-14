@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FeedScreen extends StatelessWidget {
+class NewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.pink,
+      backgroundColor: Colors.blue,
       
     );
   }

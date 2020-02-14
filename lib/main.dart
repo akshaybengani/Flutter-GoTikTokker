@@ -1,6 +1,7 @@
 import 'package:GoTikTokker/screens/loginscreen.dart';
 import 'package:GoTikTokker/providers/authprovider.dart';
 import 'package:GoTikTokker/screens/tabsscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +18,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: Colors.pink),
-        home: LoginScreen(),
+        theme: ThemeData(primaryColor: Colors.pink, primarySwatch: Colors.pink),
+        home: MyHomePage(),
         routes: {
           LoginScreen.routename: (ctx) => LoginScreen(),
           TabsScreen.routename: (ctx) => TabsScreen(),
@@ -36,9 +37,44 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //appBar: AppBar(title: Text("Tiktok")),
-      body: Center(),
+    return FutureBuilder(
+      future: checkAuthentication(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            if (snapshot.data) {
+              return TabsScreen();
+            } else {
+              return LoginScreen();
+            }
+          }
+        }
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 200,
+                  height: 200,
+                  child: Image.asset("assets/logo.png", fit: BoxFit.cover),
+                ),
+                CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  Future<bool> checkAuthentication() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    if (user == null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

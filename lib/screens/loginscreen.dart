@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 CircularProgressIndicator(),
-                Text(_loadingMsg),
+                Text(_loadingMsg, textAlign: TextAlign.center),
               ],
             ))
           : SingleChildScrollView(
