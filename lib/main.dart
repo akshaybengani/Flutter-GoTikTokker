@@ -1,5 +1,6 @@
 import 'package:GoTikTokker/screens/loginscreen.dart';
 import 'package:GoTikTokker/providers/authprovider.dart';
+import 'package:GoTikTokker/screens/tabsscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primaryColor: Colors.pink),
         home: LoginScreen(),
+        routes: {
+          LoginScreen.routename: (ctx) => LoginScreen(),
+          TabsScreen.routename: (ctx) => TabsScreen(),
+        },
       ),
     );
   }

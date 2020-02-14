@@ -1,4 +1,5 @@
 import 'package:GoTikTokker/providers/authprovider.dart';
+import 'package:GoTikTokker/screens/tabsscreen.dart';
 import 'package:GoTikTokker/services/concheck.dart';
 import 'package:GoTikTokker/services/custominfodialog.dart';
 import 'package:GoTikTokker/services/erroormsgmaker.dart';
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _loadingMsg = "🔑Checking Your Credentials🔐\nPlease Wait ...";
       _isLoading = true;
     });
-    String msg = await Provider.of<AuthProvider>(context, listen: false)
+    await Provider.of<AuthProvider>(context, listen: false)
         .loginWithEmail(email: _email, password: _password)
         .catchError((er) {
       print(er);
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     });
     if(authStatus){
-      Navigator.of(context).pushNamed("");
+      Navigator.of(context).pushNamed(TabsScreen.routename);
     }
 
   }
@@ -131,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _password = pvalue;
                         },
                         validator: (value) {
-                          if (value.isEmpty || !(value.length < 6)) {
+                          if (value.isEmpty || !(value.length > 6)) {
                             return "Invalid Password";
                           }
                           return null;

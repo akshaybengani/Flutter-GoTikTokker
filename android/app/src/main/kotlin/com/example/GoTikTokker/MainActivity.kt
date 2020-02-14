@@ -1,4 +1,4 @@
-package com.example.GoTikTokker
+package com.akshaybengani.GoTikTokker
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
