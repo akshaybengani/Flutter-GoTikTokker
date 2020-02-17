@@ -1,6 +1,7 @@
 class VideoModal {
-  final int likes;
+  final String id;
+  int likes;
   final String vurl;
   final String uid;
-  VideoModal({this.likes, this.vurl, this.uid});
+  VideoModal({this.id, this.likes, this.vurl, this.uid});
 }
