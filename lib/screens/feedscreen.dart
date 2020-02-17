@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:GoTikTokker/models/videomodal.dart';
+import 'package:GoTikTokker/providers/videodatablock.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -10,17 +13,34 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
+  bool isLoading = true;
 
   @override
   void initState() {
-    _controller = VideoPlayerController.network(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
-
-    _initializeVideoPlayerFuture = _controller.initialize();
-
-    _controller.setLooping(true);
-
     super.initState();
+    fetchPrevVideosAndPlayOne();
+  }
+
+  void fetchPrevVideosAndPlayOne() async {
+    await Provider.of<VideoDataBlock>(context, listen: false)
+        .fetchAllVideoMetaData()
+        .then((value) => nextVideoToPlay());
+  }
+
+  void nextVideoToPlay() async {
+    // setState(() {
+    //   isLoading = true;
+    // });
+    VideoModal model = Provider.of<VideoDataBlock>(context, listen: false)
+        .getRandomShuffledVideo();
+    _controller = VideoPlayerController.network(model.vurl);
+    _initializeVideoPlayerFuture = _controller.initialize().then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    _controller.play();
+    _controller.setLooping(true);
   }
 
   @override
@@ -33,53 +53,38 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Colors.pink,
-      body: Stack(
-        children: <Widget>[
-          
-          FutureBuilder(
-            future: _initializeVideoPlayerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return AspectRatio(
-                  aspectRatio: 16/9,
-                  child: VideoPlayer(_controller  ),
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-          Positioned(
-            top: 300,
-            left: 100,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.purple,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                Container(
+                    child: GestureDetector(
+                  onTap: () {
+                    _controller.value.isPlaying
+                        ? _controller.pause()
+                        : _controller.play();
+                  },
+                  child: AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
+                )),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        color: Colors.pink,
+                      ),
+                    )
+                  ],
+                )
+              ],
             ),
-          ),
-        ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(
-            () {
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              _controller.play();
-            }
-          }
-          );
-        },
-        // Display the correct icon depending on the state of the player.
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

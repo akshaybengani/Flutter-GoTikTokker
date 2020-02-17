@@ -1,3 +1,4 @@
+import 'package:GoTikTokker/providers/videodatablock.dart';
 import 'package:GoTikTokker/screens/loginscreen.dart';
 import 'package:GoTikTokker/providers/authprovider.dart';
 import 'package:GoTikTokker/screens/tabsscreen.dart';
@@ -14,7 +15,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(
           value: AuthProvider(),
-        )
+        ),
+        ChangeNotifierProvider.value(
+          value: VideoDataBlock(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
