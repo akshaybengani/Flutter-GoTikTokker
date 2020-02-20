@@ -35,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _loadingMsg = "🔑Checking Your Credentials🔐\nPlease Wait ...";
       _isLoading = true;
     });
+    // ! Lets make it Flutter Bloc 
+
     await Provider.of<AuthProvider>(context, listen: false)
         .loginWithEmail(email: _email, password: _password)
         .catchError((er) {
@@ -48,6 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if(authStatus){
       Navigator.of(context).pushNamed(TabsScreen.routename);
     }
+
+    // ! Complete this bloc over here   
 
   }
 
